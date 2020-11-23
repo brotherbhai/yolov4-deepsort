@@ -84,13 +84,13 @@ class ImageEncoder(object):
         tf.import_graph_def(graph_def, name="net")                     #Imports the graph from graph_def into the current default Graph 
         self.input_var = tf.get_default_graph().get_tensor_by_name(    # Used to access the tensors by tensor name ex 0, 1,2,3... rather than the pyhton variable
             "%s:0" % input_name)
-        self.output_var = tf.get_default_graph().get_tensor_by_name(
+        self.output_var = tf.get_default_graph().get_tensor_by_name(   # Used to access the tensors by tensor name ex 0, 1,2,3... rather than the pyhton variable 
             "%s:0" % output_name)
 
-        assert len(self.output_var.get_shape()) == 2
-        assert len(self.input_var.get_shape()) == 4
-        self.feature_dim = self.output_var.get_shape().as_list()[-1]
-        self.image_shape = self.input_var.get_shape().as_list()[1:]
+        assert len(self.output_var.get_shape()) == 2                   # Making sure that those dimensions do match for output_var
+        assert len(self.input_var.get_shape()) == 4                    # Making sure that those dimensions do match  for input_var
+        self.feature_dim = self.output_var.get_shape().as_list()[-1]   # the feature_dim is picking up the last value of the list of output_var
+        self.image_shape = self.input_var.get_shape().as_list()[1:]    # the image_shape is picking the last 3 values i.e. leaving the 1st value of the input_var
 
     def __call__(self, data_x, batch_size=32):
         out = np.zeros((len(data_x), self.feature_dim), np.float32)
