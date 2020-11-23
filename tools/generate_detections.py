@@ -74,15 +74,15 @@ def extract_image_patch(image, bbox, patch_shape):
 
 
 class ImageEncoder(object):
-
+#
     def __init__(self, checkpoint_filename, input_name="images",
                  output_name="features"):
         self.session = tf.Session()
-        with tf.gfile.GFile(checkpoint_filename, "rb") as file_handle:
-            graph_def = tf.GraphDef()
-            graph_def.ParseFromString(file_handle.read())
-        tf.import_graph_def(graph_def, name="net")
-        self.input_var = tf.get_default_graph().get_tensor_by_name(
+        with tf.gfile.GFile(checkpoint_filename, "rb") as file_handle: #used to load the mars.pb file
+            graph_def = tf.GraphDef()                                  #used .pb file  
+            graph_def.ParseFromString(file_handle.read())              # for graph generation
+        tf.import_graph_def(graph_def, name="net")                     #Imports the graph from graph_def into the current default Graph 
+        self.input_var = tf.get_default_graph().get_tensor_by_name(    # Used to access the tensors by tensor name ex 0, 1,2,3... rather than the pyhton variable
             "%s:0" % input_name)
         self.output_var = tf.get_default_graph().get_tensor_by_name(
             "%s:0" % output_name)
